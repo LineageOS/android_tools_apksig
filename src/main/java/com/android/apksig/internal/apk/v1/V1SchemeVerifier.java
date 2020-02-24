@@ -1943,13 +1943,27 @@ public abstract class V1SchemeVerifier {
         private final List<IssueWithParams> mWarnings = new ArrayList<>();
         private final List<IssueWithParams> mErrors = new ArrayList<>();
 
-        private boolean containsErrors() {
+        public boolean containsErrors() {
             if (!mErrors.isEmpty()) {
                 return true;
             }
             for (SignerInfo signer : signers) {
                 if (signer.containsErrors()) {
                     return true;
+                }
+            }
+            return false;
+        }
+
+        public boolean containsWarnings() {
+            if (!mWarnings.isEmpty()) {
+                return true;
+            }
+            if (!signers.isEmpty()) {
+                for (SignerInfo signer : signers) {
+                    if (signer.containsWarnings()) {
+                        return true;
+                    }
                 }
             }
             return false;
@@ -1989,6 +2003,10 @@ public abstract class V1SchemeVerifier {
 
             private boolean containsErrors() {
                 return !mErrors.isEmpty();
+            }
+
+            public boolean containsWarnings() {
+                return !mWarnings.isEmpty();
             }
 
             private void addError(Issue msg, Object... parameters) {

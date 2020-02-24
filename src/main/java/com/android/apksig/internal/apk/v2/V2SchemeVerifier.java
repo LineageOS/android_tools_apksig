@@ -833,6 +833,20 @@ public abstract class V2SchemeVerifier {
             return false;
         }
 
+        public boolean containsWarnings() {
+            if (!mWarnings.isEmpty()) {
+                return true;
+            }
+            if (!signers.isEmpty()) {
+                for (SignerInfo signer : signers) {
+                    if (signer.containsWarnings()) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public void addError(Issue msg, Object... parameters) {
             mErrors.add(new IssueWithParams(msg, parameters));
         }
@@ -872,6 +886,10 @@ public abstract class V2SchemeVerifier {
 
             public boolean containsErrors() {
                 return !mErrors.isEmpty();
+            }
+
+            public boolean containsWarnings() {
+                return !mWarnings.isEmpty();
             }
 
             public List<IssueWithParams> getErrors() {
