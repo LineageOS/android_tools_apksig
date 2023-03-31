@@ -465,6 +465,16 @@ public class ApkVerifier {
         }
 
         private void mergeFrom(V1SchemeVerifier.Result source) {
+            if (source == null) {
+                return;
+            }
+            if (source.containsErrors()) {
+                mErrors.addAll(source.getErrors());
+            }
+            if (source.containsWarnings()) {
+                mWarnings.addAll(source.getWarnings());
+            }
+
             mVerifiedUsingV1Scheme = source.verified;
             mErrors.addAll(source.getErrors());
             mWarnings.addAll(source.getWarnings());
@@ -477,6 +487,16 @@ public class ApkVerifier {
         }
 
         private void mergeFrom(V2SchemeVerifier.Result source) {
+            if (source == null) {
+                return;
+            }
+            if (source.containsErrors()) {
+                mErrors.addAll(source.getErrors());
+            }
+            if (source.containsWarnings()) {
+                mWarnings.addAll(source.getWarnings());
+            }
+
             mVerifiedUsingV2Scheme = source.verified;
             mErrors.addAll(source.getErrors());
             mWarnings.addAll(source.getWarnings());
@@ -675,6 +695,16 @@ public class ApkVerifier {
          * APK is not JAR-signed.
          */
         JAR_SIG_NO_SIGNATURES("No JAR signatures"),
+
+        /**
+         * APK signature scheme v1 has exceeded the maximum number of jar signers.
+         * <ul>
+         * <li>Parameter 1: maximum allowed signers ({@code Integer})</li>
+         * <li>Parameter 2: total number of signers ({@code Integer})</li>
+         * </ul>
+         */
+        JAR_SIG_MAX_SIGNATURES_EXCEEDED(
+                "APK Signature Scheme v1 only supports a maximum of %1$d signers, found %2$d"),
 
         /**
          * APK does not contain any entries covered by JAR signatures.
@@ -1077,6 +1107,16 @@ public class ApkVerifier {
          * </ul>
          */
         V2_SIG_MALFORMED_ADDITIONAL_ATTRIBUTE("Malformed additional attribute #%1$d"),
+
+        /**
+         * APK signature scheme v2 has exceeded the maximum number of signers.
+         * <ul>
+         * <li>Parameter 1: maximum allowed signers ({@code Integer})</li>
+         * <li>Parameter 2: total number of signers ({@code Integer})</li>
+         * </ul>
+         */
+        V2_SIG_MAX_SIGNATURES_EXCEEDED(
+                "APK Signature Scheme V2 only supports a maximum of %1$d signers, found %2$d"),
 
         /**
          * APK Signature Scheme v2 signature contains no signers.
