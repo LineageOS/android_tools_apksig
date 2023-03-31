@@ -161,6 +161,12 @@ public abstract class V2SchemeSigner {
                     throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
         // FORMAT:
         // * length-prefixed sequence of length-prefixed signer blocks.
+        int MAX_APK_SIGNERS = 10;
+        if (signerConfigs.size() > MAX_APK_SIGNERS) {
+            throw new IllegalArgumentException(
+                    "APK Signature Scheme v2 only supports a maximum of " + MAX_APK_SIGNERS + ", "
+                            + signerConfigs.size() + " provided");
+        }
 
         List<byte[]> signerBlocks = new ArrayList<>(signerConfigs.size());
         int signerNumber = 0;

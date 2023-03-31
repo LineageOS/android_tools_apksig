@@ -16,6 +16,7 @@
 
 package com.android.apksig.internal.apk.v1;
 
+
 import com.android.apksig.ApkVerifier.Issue;
 import com.android.apksig.ApkVerifier.IssueWithParams;
 import com.android.apksig.apk.ApkFormatException;
@@ -249,6 +250,7 @@ public abstract class V1SchemeVerifier {
             // * All JAR entries listed in JAR manifest are present in the APK.
 
             // Identify signers
+            int MAX_APK_SIGNERS = 10;
             List<Signer> signers = new ArrayList<>(sigBlockEntries.size());
             for (CentralDirectoryRecord sigBlockEntry : sigBlockEntries) {
                 String sigBlockEntryName = sigBlockEntry.getName();
@@ -275,6 +277,11 @@ public abstract class V1SchemeVerifier {
             }
             if (signers.isEmpty()) {
                 result.addError(Issue.JAR_SIG_NO_SIGNATURES);
+                return;
+            }
+            if (signers.size() > MAX_APK_SIGNERS) {
+                result.addError(Issue.JAR_SIG_MAX_SIGNATURES_EXCEEDED, MAX_APK_SIGNERS,
+                        signers.size());
                 return;
             }
 

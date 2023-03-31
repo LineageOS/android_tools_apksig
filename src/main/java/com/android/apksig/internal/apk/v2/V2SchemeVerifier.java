@@ -180,6 +180,7 @@ public abstract class V2SchemeVerifier {
             int maxSdkVersion,
             ApkSigningBlockUtils.Result result) throws NoSuchAlgorithmException {
         ByteBuffer signers;
+        int MAX_APK_SIGNERS = 10;
         try {
             signers = ApkSigningBlockUtils.getLengthPrefixedSlice(apkSignatureSchemeV2Block);
         } catch (ApkFormatException e) {
@@ -220,6 +221,9 @@ public abstract class V2SchemeVerifier {
                 signerInfo.addError(Issue.V2_SIG_MALFORMED_SIGNER);
                 return;
             }
+        }
+        if (signerCount > MAX_APK_SIGNERS) {
+            result.addError(Issue.V2_SIG_MAX_SIGNATURES_EXCEEDED, MAX_APK_SIGNERS, signerCount);
         }
     }
 

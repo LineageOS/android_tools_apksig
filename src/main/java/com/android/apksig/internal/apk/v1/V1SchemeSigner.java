@@ -246,8 +246,15 @@ public abstract class V1SchemeSigner {
             String createdBy)
                     throws NoSuchAlgorithmException, ApkFormatException, InvalidKeyException,
                             CertificateException, SignatureException {
+
+        int MAX_APK_SIGNERS = 10;
         if (signerConfigs.isEmpty()) {
             throw new IllegalArgumentException("At least one signer config must be provided");
+        }
+        if (signerConfigs.size() > MAX_APK_SIGNERS) {
+            throw new IllegalArgumentException(
+                    "APK Signature Scheme v1 only supports a maximum of " + MAX_APK_SIGNERS + ", "
+                            + signerConfigs.size() + " provided");
         }
         OutputManifestFile manifest =
                 generateManifestFile(
