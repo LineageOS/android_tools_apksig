@@ -1240,6 +1240,20 @@ public class ApkSigningBlockUtils {
             mErrors.add(new ApkVerifier.IssueWithParams(msg, parameters));
         }
 
+        public boolean containsWarnings() {
+            if (!mWarnings.isEmpty()) {
+                return true;
+            }
+            if (!signers.isEmpty()) {
+                for (Result.SignerInfo signer : signers) {
+                    if (signer.containsWarnings()) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public void addWarning(ApkVerifier.Issue msg, Object... parameters) {
             mWarnings.add(new ApkVerifier.IssueWithParams(msg, parameters));
         }
@@ -1278,6 +1292,10 @@ public class ApkSigningBlockUtils {
 
             public boolean containsErrors() {
                 return !mErrors.isEmpty();
+            }
+
+            public boolean containsWarnings() {
+                return !mWarnings.isEmpty();
             }
 
             public List<ApkVerifier.IssueWithParams> getErrors() {

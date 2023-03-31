@@ -16,6 +16,8 @@
 
 package com.android.apksig.internal.apk.v1;
 
+import static com.android.apksig.Constants.MAX_APK_SIGNERS;
+
 import com.android.apksig.ApkVerifier.Issue;
 import com.android.apksig.ApkVerifier.IssueWithParams;
 import com.android.apksig.apk.ApkFormatException;
@@ -301,6 +303,11 @@ public abstract class V1SchemeVerifier {
             }
             if (signers.isEmpty()) {
                 result.addError(Issue.JAR_SIG_NO_SIGNATURES);
+                return;
+            }
+            if (signers.size() > MAX_APK_SIGNERS) {
+                result.addError(Issue.JAR_SIG_MAX_SIGNATURES_EXCEEDED, MAX_APK_SIGNERS,
+                        signers.size());
                 return;
             }
 
